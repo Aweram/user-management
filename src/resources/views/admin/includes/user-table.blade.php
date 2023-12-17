@@ -19,7 +19,18 @@
             <tr>
                 <td>{{ $item->name }}</td>
                 <td>{{ $item->email }}</td>
-                <td></td>
+                <td>
+                    <div class="flex justify-center">
+                        <button type="button" class="btn btn-dark px-btn-x-ico rounded-e-none"
+                                wire:click="showEdit({{ $item->id }})">
+                            <x-tt::ico.edit />
+                        </button>
+                        <button type="button" class="btn btn-danger px-btn-x-ico rounded-s-none"
+                                wire:click="showDelete({{ $item->id }})">
+                            <x-tt::ico.trash />
+                        </button>
+                    </div>
+                </td>
             </tr>
         @endforeach
     </x-slot>
