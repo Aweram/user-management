@@ -11,10 +11,11 @@
         }
     ],
     "require": {
-        "aweram/tailwindcss-theme": "@dev"
+        "aweram/tailwindcss-theme": "@dev",
+        "laravel/fortify": "^1.18"
     },
     "autoload": {
-        "pasr-4": {
+        "psr-4": {
             "Aweram\\UserManagement\\": "src/"
         }
     },
