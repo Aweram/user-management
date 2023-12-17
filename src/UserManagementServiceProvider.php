@@ -2,7 +2,9 @@
 
 namespace Aweram\UserManagement;
 
+use Aweram\UserManagement\Livewire\UserIndexWire;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 
 class UserManagementServiceProvider extends ServiceProvider
 {
@@ -10,6 +12,9 @@ class UserManagementServiceProvider extends ServiceProvider
     {
         // Подключение views
         $this->loadViewsFrom(__DIR__ . "/resources/views", "um");
+
+        // Livewire
+        Livewire::component("um-users", UserIndexWire::class);
     }
 
     public function register(): void
