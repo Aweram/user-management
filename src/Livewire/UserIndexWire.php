@@ -13,10 +13,17 @@ class UserIndexWire extends Component
 
     public string $sortBy = "name";
     public string $sortDirection = "asc";
+    public string $searchName = "";
+    public string $searchEmail = "";
 
     protected function queryString(): array
     {
-        return ["sortBy", "sortDirection"];
+        return [
+            "sortBy",
+            "sortDirection",
+            "searchName" => ["as" => "name", "except" => ""],
+            "searchEmail" => ["as" => "email", "except" => ""]
+        ];
     }
 
     /**
@@ -25,11 +32,31 @@ class UserIndexWire extends Component
     public function render(): View
     {
         $query = User::query()->select("id", "name", "email");
+        if (! empty($this->searchName)) {
+            $value = trim($this->searchName);
+            $query->where("name", "like", "%$value%");
+        }
+        if (! empty($this->searchEmail)) {
+            $value = trim($this->searchEmail);
+            $query->where("email", "like", "%$value%");
+        }
         $query->orderBy($this->sortBy, $this->sortDirection);
 
         return view("um::livewire.admin.users", [
             "users" => $query->paginate(),
         ]);
+    }
+
+    /**
+     * Очистить форму поиска.
+     *
+     * @return void
+     */
+    public function clearSearch(): void
+    {
+        $this->searchEmail = "";
+        $this->searchName = "";
+        $this->resetPage();
     }
 
     /**
