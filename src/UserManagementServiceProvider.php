@@ -14,11 +14,20 @@ class UserManagementServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . "/resources/views", "um");
 
         // Livewire
-        Livewire::component("um-users", UserIndexWire::class);
+        $component = config("user-management.customIndexComponent");
+        Livewire::component(
+            "um-users",
+            $component ?? UserIndexWire::class
+        );
     }
 
     public function register(): void
     {
+        // Подключение конфигурации
+        $this->mergeConfigFrom(
+            __DIR__ . "/config/user-management.php", "user-management"
+        );
+
         // Подключение routes
         $this->loadRoutesFrom(__DIR__ . "/routes/admin.php");
 
