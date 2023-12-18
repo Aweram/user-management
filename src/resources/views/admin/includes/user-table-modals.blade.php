@@ -37,7 +37,7 @@
                 </button>
                 <button type="submit" form="dataForm" class="btn btn-primary"
                         wire:loading.attr="disabled">
-                    Обновить
+                    {{ $userId ? "Обновить" : "Добавить" }}
                 </button>
             </div>
         </form>

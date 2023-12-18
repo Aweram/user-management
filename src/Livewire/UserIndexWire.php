@@ -5,6 +5,8 @@ namespace Aweram\UserManagement\Livewire;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Mockery\Exception;
@@ -103,9 +105,35 @@ class UserIndexWire extends Component
         $this->displayData = false;
     }
 
-    public function store()
+    /**
+     * Добавить пользователя.
+     *
+     * @return void
+     */
+    public function store(): void
     {
+        $this->validate([
+            "name" => $this->nameRules(),
+            "email" => $this->emailRules(),
+        ], [], [
+            "name" => "Имя",
+            "email" => "E-mail"
+        ]);
+
+        $newPassword = Str::random(8);
+        User::create([
+            "name" => $this->name,
+            "email" => $this->email,
+            "password" => Hash::make($newPassword)
+        ]);
+
+        session()->flash("success", implode(", ", [
+            "Пользователь добавлен",
+            "Пароль: $newPassword"
+        ]));
+
         $this->closeCreate();
+        $this->resetPage();
     }
 
     /**
@@ -147,20 +175,19 @@ class UserIndexWire extends Component
      */
     public function update(): void
     {
+        $this->validate([
+            "name" => $this->nameRules(),
+            "email" => $this->emailRules(),
+        ], [], [
+            "name" => "Имя",
+            "email" => "E-mail"
+        ]);
+
         try {
             $user = User::findOrFail($this->userId);
             /**
              * @var User $user
              */
-
-            $this->validate([
-                "name" => $this->nameRules(),
-                "email" => $this->emailRules(),
-            ], [], [
-                "name" => "Имя",
-                "email" => "E-mail"
-            ]);
-
             $user->update([
                 "name" => $this->name,
                 "email" => $this->email
