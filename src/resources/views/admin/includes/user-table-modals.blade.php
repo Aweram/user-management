@@ -11,20 +11,24 @@
                 <label for="name" class="inline-block mb-2">
                     Имя<span class="text-danger">*</span>
                 </label>
-                <input type="text" id="name" class="form-control"
+                <input type="text" id="name"
+                       class="form-control {{ $errors->has("name") ? "border-danger" : "" }}"
                        required
                        wire:loading.attr="disabled"
                        wire:model="name">
+                <x-tt::form.error name="name" />
             </div>
 
             <div>
                 <label for="email" class="inline-block mb-2">
                     E-mail<span class="text-danger">*</span>
                 </label>
-                <input type="email" id="email" class="form-control"
+                <input type="email" id="email"
+                       class="form-control {{ $errors->has('email') ? 'border-danger': '' }}"
                        required
                        wire:loading.attr="disabled"
                        wire:model="email">
+                <x-tt::form.error name="email" />
             </div>
 
             <div class="flex items-center space-x-indent-half">

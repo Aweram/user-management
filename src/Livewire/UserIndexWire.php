@@ -82,6 +82,101 @@ class UserIndexWire extends Component
     }
 
     /**
+     * Показать форму добавления.
+     *
+     * @return void
+     */
+    public function showCreate(): void
+    {
+        $this->resetFields();
+        $this->displayData = true;
+    }
+
+    /**
+     * Закрыть форму создания.
+     *
+     * @return void
+     */
+    public function closeCreate(): void
+    {
+        $this->resetFields();
+        $this->displayData = false;
+    }
+
+    public function store()
+    {
+        $this->closeCreate();
+    }
+
+    /**
+     * Открыть редактирование пользователя.
+     *
+     * @param int $userId
+     * @return void
+     */
+    public function showEdit(int $userId): void
+    {
+        $this->resetFields();
+        try {
+            $user = User::findOrFail($userId);
+            $this->userId = $userId;
+            $this->name = $user->name;
+            $this->email = $user->email;
+            $this->displayData = true;
+        } catch (\Exception $ex) {
+            session()->flash("error", "Пользователь не найден");
+            $this->closeEdit();
+        }
+    }
+
+    /**
+     * Закрыть форму редактирования.
+     *
+     * @return void
+     */
+    public function closeEdit(): void
+    {
+        $this->resetFields();
+        $this->displayData = false;
+    }
+
+    /**
+     * Обновление пользователя.
+     *
+     * @return void
+     */
+    public function update(): void
+    {
+        try {
+            $user = User::findOrFail($this->userId);
+            /**
+             * @var User $user
+             */
+
+            $this->validate([
+                "name" => $this->nameRules(),
+                "email" => $this->emailRules(),
+            ], [], [
+                "name" => "Имя",
+                "email" => "E-mail"
+            ]);
+
+            $user->update([
+                "name" => $this->name,
+                "email" => $this->email
+            ]);
+
+            session()->flash("success", "Пользователь успешно обновлен");
+
+            $this->resetPage();
+        } catch (Exception $ex) {
+            session()->flash("error", "Ошибка обновления");
+        }
+
+        $this->closeEdit();
+    }
+
+    /**
      * Открыть подтверждение удаления.
      *
      * @param int $userId
@@ -125,43 +220,6 @@ class UserIndexWire extends Component
     }
 
     /**
-     * Открыть редактирование пользователя.
-     *
-     * @param int $userId
-     * @return void
-     */
-    public function showEdit(int $userId): void
-    {
-        $this->resetFields();
-        try {
-            $user = User::findOrFail($userId);
-            $this->userId = $userId;
-            $this->name = $user->name;
-            $this->email = $user->email;
-            $this->displayData = true;
-        } catch (\Exception $ex) {
-            session()->flash("error", "Пользователь не найден");
-            $this->closeEdit();
-        }
-    }
-
-    /**
-     * Закрыть форму редактирования.
-     *
-     * @return void
-     */
-    public function closeEdit(): void
-    {
-        $this->resetFields();
-        $this->displayData = false;
-    }
-
-    public function update()
-    {
-        $this->closeEdit();
-    }
-
-    /**
      * Изменить направление сортировки.
      *
      * @param $name
@@ -174,10 +232,35 @@ class UserIndexWire extends Component
         } else $this->sortDirection = "asc";
     }
 
-    private function resetFields()
+    /**
+     * Сбросить переменные форм.
+     *
+     * @return void
+     */
+    private function resetFields(): void
     {
-        $this->userId = null;
-        $this->name = "";
-        $this->email = "";
+        $this->reset(["name", "email", "userId"]);
+    }
+
+    /**
+     * Валидация имени пользователя.
+     *
+     * @return string[]
+     */
+    private function nameRules(): array
+    {
+        return ["required", "string", "max:50"];
+    }
+
+    /**
+     * Валидация email.
+     *
+     * @return string[]
+     */
+    private function emailRules(): array
+    {
+        $uniqueCondition = "unique:users,email";
+        if ($this->userId) $uniqueCondition .= ",{$this->userId}";
+        return ["required", "string", "email", "max:50", $uniqueCondition];
     }
 }
