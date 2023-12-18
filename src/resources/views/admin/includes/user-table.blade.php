@@ -22,10 +22,13 @@
                 <td>
                     <div class="flex justify-center">
                         <button type="button" class="btn btn-dark px-btn-x-ico rounded-e-none"
+                                wire:loading.attr="disabled"
                                 wire:click="showEdit({{ $item->id }})">
                             <x-tt::ico.edit />
                         </button>
                         <button type="button" class="btn btn-danger px-btn-x-ico rounded-s-none"
+                                @if ($item->id === Auth::id()) disabled @endif
+                                wire:loading.attr="disabled"
                                 wire:click="showDelete({{ $item->id }})">
                             <x-tt::ico.trash />
                         </button>

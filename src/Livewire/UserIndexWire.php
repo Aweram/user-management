@@ -38,6 +38,34 @@ class UserIndexWire extends Component
     }
 
     /**
+     * Валидация форм.
+     *
+     * @return array[]
+     */
+    public function rules(): array
+    {
+        $uniqueCondition = "unique:users,email";
+        if ($this->userId) $uniqueCondition .= ",{$this->userId}";
+        return [
+            "name" => ["required", "string", "max:50"],
+            "email" => ["required", "string", "email", "max:50", $uniqueCondition],
+        ];
+    }
+
+    /**
+     * Имена полей.
+     *
+     * @return string[]
+     */
+    public function validationAttributes(): array
+    {
+        return [
+            "name" => "Имя",
+            "email" => "E-mail"
+        ];
+    }
+
+    /**
      * @return View
      */
     public function render(): View
@@ -65,8 +93,7 @@ class UserIndexWire extends Component
      */
     public function clearSearch(): void
     {
-        $this->searchEmail = "";
-        $this->searchName = "";
+        $this->reset("searchEmail", "searchName");
         $this->resetPage();
     }
 
@@ -78,7 +105,9 @@ class UserIndexWire extends Component
      */
     public function changeSort($name): void
     {
-        $this->switchDirection($name);
+        if ($this->sortBy == $name) {
+            $this->sortDirection = $this->sortDirection == "asc" ? "desc" : "asc";
+        } else $this->sortDirection = "asc";
         $this->sortBy = $name;
         $this->resetPage();
     }
@@ -112,14 +141,7 @@ class UserIndexWire extends Component
      */
     public function store(): void
     {
-        $this->validate([
-            "name" => $this->nameRules(),
-            "email" => $this->emailRules(),
-        ], [], [
-            "name" => "Имя",
-            "email" => "E-mail"
-        ]);
-
+        $this->validate();
         $newPassword = Str::random(8);
         User::create([
             "name" => $this->name,
@@ -175,14 +197,7 @@ class UserIndexWire extends Component
      */
     public function update(): void
     {
-        $this->validate([
-            "name" => $this->nameRules(),
-            "email" => $this->emailRules(),
-        ], [], [
-            "name" => "Имя",
-            "email" => "E-mail"
-        ]);
-
+        $this->validate();
         try {
             $user = User::findOrFail($this->userId);
             /**
@@ -247,19 +262,6 @@ class UserIndexWire extends Component
     }
 
     /**
-     * Изменить направление сортировки.
-     *
-     * @param $name
-     * @return void
-     */
-    private function switchDirection($name): void
-    {
-        if ($this->sortBy == $name) {
-            $this->sortDirection = $this->sortDirection == "asc" ? "desc" : "asc";
-        } else $this->sortDirection = "asc";
-    }
-
-    /**
      * Сбросить переменные форм.
      *
      * @return void
@@ -267,27 +269,5 @@ class UserIndexWire extends Component
     private function resetFields(): void
     {
         $this->reset(["name", "email", "userId"]);
-    }
-
-    /**
-     * Валидация имени пользователя.
-     *
-     * @return string[]
-     */
-    private function nameRules(): array
-    {
-        return ["required", "string", "max:50"];
-    }
-
-    /**
-     * Валидация email.
-     *
-     * @return string[]
-     */
-    private function emailRules(): array
-    {
-        $uniqueCondition = "unique:users,email";
-        if ($this->userId) $uniqueCondition .= ",{$this->userId}";
-        return ["required", "string", "email", "max:50", $uniqueCondition];
     }
 }
