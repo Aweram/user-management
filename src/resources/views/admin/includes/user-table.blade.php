@@ -4,14 +4,14 @@
             <x-tt::table.heading sortable
                                  wire:click="changeSort('name')"
                                  :direction="$sortBy == 'name' ? $sortDirection : null">
-                Имя
+                {{ __("Name") }}
             </x-tt::table.heading>
             <x-tt::table.heading sortable
                                  wire:click="changeSort('email')"
                                  :direction="$sortBy == 'email' ? $sortDirection : null">
                 E-mail
             </x-tt::table.heading>
-            <x-tt::table.heading>Действия</x-tt::table.heading>
+            <x-tt::table.heading>{{ __("Actions") }}</x-tt::table.heading>
         </tr>
     </x-slot>
     <x-slot name="body">
@@ -39,7 +39,7 @@
     </x-slot>
     <x-slot name="caption">
         <div class="flex justify-between">
-            <div>Всего: {{ $users->total() }}</div>
+            <div>{{ __("Total") }}: {{ $users->total() }}</div>
             {{ $users->links("tt::pagination.live") }}
         </div>
     </x-slot>

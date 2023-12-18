@@ -1,0 +1,19 @@
+{
+    "Users": "Пользователи",
+    "Clear": "Очистить",
+    "Add": "Добавить",
+    "Name": "Имя",
+    "Actions": "Действия",
+    "Total": "Всего",
+    "Delete user": "Удалить пользователя",
+    "It will be impossible to restore the user!": "Будет невозможно восстановить пользователя!",
+    "Edit user": "Редактировать пользователя",
+    "Add user": "Добавить пользователя",
+    "Cancel": "Отмена",
+    "Update": "Обновить",
+    "User successfully added": "Пользователь добавлен",
+    "User successfully updated": "Пользователь обновлен",
+    "User successfully deleted": "Пользователь удален",
+    "User not found": "Пользователь не найден",
+    "Error while update": "Ошибка обновления"
+}

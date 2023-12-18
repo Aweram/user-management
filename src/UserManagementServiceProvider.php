@@ -21,5 +21,8 @@ class UserManagementServiceProvider extends ServiceProvider
     {
         // Подключение routes
         $this->loadRoutesFrom(__DIR__ . "/routes/admin.php");
+
+        // Подключение переводов
+        $this->loadJsonTranslationsFrom(__DIR__ . "/lang");
     }
 }

@@ -1,15 +1,15 @@
 <x-tt::modal.confirm wire:model="displayDelete">
-    <x-slot name="title">Удалить пользователя</x-slot>
-    <x-slot name="text">Будет невозможно восстановить пользователя!</x-slot>
+    <x-slot name="title">{{ __("Delete user") }}</x-slot>
+    <x-slot name="text">{{ __("It will be impossible to restore the user!") }}</x-slot>
 </x-tt::modal.confirm>
 
 <x-tt::modal.aside wire:model="displayData">
-    <x-slot name="title">{{ $userId ? "Редактировать" : "Добавить" }} пользователя</x-slot>
+    <x-slot name="title">{{ $userId ? __("Edit user") : __("Add user") }}</x-slot>
     <x-slot name="content">
         <form wire:submit.prevent="{{ $userId ? 'update' : 'store' }}" class="space-y-indent-half" id="dataForm">
             <div>
                 <label for="name" class="inline-block mb-2">
-                    Имя<span class="text-danger">*</span>
+                    {{ __("Name") }}<span class="text-danger">*</span>
                 </label>
                 <input type="text" id="name"
                        class="form-control {{ $errors->has("name") ? "border-danger" : "" }}"
@@ -33,11 +33,11 @@
 
             <div class="flex items-center space-x-indent-half">
                 <button type="button" class="btn btn-outline-dark" wire:click="closeEdit">
-                    Отмена
+                    {{ __("Cancel") }}
                 </button>
                 <button type="submit" form="dataForm" class="btn btn-primary"
                         wire:loading.attr="disabled">
-                    {{ $userId ? "Обновить" : "Добавить" }}
+                    {{ $userId ? __("Update") : __("Add") }}
                 </button>
             </div>
         </form>

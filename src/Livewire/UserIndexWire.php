@@ -60,7 +60,7 @@ class UserIndexWire extends Component
     public function validationAttributes(): array
     {
         return [
-            "name" => "Имя",
+            "name" => __("Name"),
             "email" => "E-mail"
         ];
     }
@@ -150,8 +150,8 @@ class UserIndexWire extends Component
         ]);
 
         session()->flash("success", implode(", ", [
-            "Пользователь добавлен",
-            "Пароль: $newPassword"
+            __("User successfully added"),
+            __("Password") . ": $newPassword"
         ]));
 
         $this->closeCreate();
@@ -174,7 +174,7 @@ class UserIndexWire extends Component
             $this->email = $user->email;
             $this->displayData = true;
         } catch (\Exception $ex) {
-            session()->flash("error", "Пользователь не найден");
+            session()->flash("error", __("User not found"));
             $this->closeEdit();
         }
     }
@@ -208,11 +208,11 @@ class UserIndexWire extends Component
                 "email" => $this->email
             ]);
 
-            session()->flash("success", "Пользователь успешно обновлен");
+            session()->flash("success", __("User successfully updated"));
 
             $this->resetPage();
         } catch (Exception $ex) {
-            session()->flash("error", "Ошибка обновления");
+            session()->flash("error", __("Error while update"));
         }
 
         $this->closeEdit();
@@ -253,9 +253,9 @@ class UserIndexWire extends Component
             try {
                 $user = User::find($this->userId);
                 $user->delete();
-                session()->flash("success", "Пользователь был успешно удален");
+                session()->flash("success", __("User successfully deleted"));
             } catch (Exception $ex) {
-                session()->flash("error", "Неудалось удалить пользователя");
+                session()->flash("error", __("User not found"));
             }
         }
         $this->closeDelete();
