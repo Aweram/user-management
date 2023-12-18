@@ -19,7 +19,7 @@ class UserIndexWire extends Component
     public string $searchEmail = "";
 
     public bool $displayDelete = false;
-    public bool $displayEdit = false;
+    public bool $displayData = false;
     public $userId = null;
 
     public string $name = "";
@@ -138,7 +138,7 @@ class UserIndexWire extends Component
             $this->userId = $userId;
             $this->name = $user->name;
             $this->email = $user->email;
-            $this->displayEdit = true;
+            $this->displayData = true;
         } catch (\Exception $ex) {
             session()->flash("error", "Пользователь не найден");
             $this->closeEdit();
@@ -153,7 +153,12 @@ class UserIndexWire extends Component
     public function closeEdit(): void
     {
         $this->resetFields();
-        $this->displayEdit = false;
+        $this->displayData = false;
+    }
+
+    public function update()
+    {
+        $this->closeEdit();
     }
 
     /**
