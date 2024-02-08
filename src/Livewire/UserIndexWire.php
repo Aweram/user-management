@@ -22,7 +22,7 @@ class UserIndexWire extends Component
 
     public bool $displayDelete = false;
     public bool $displayData = false;
-    public $userId = null;
+    public int|null $userId = null;
 
     public string $name = "";
     public string $email = "";
@@ -124,17 +124,6 @@ class UserIndexWire extends Component
     }
 
     /**
-     * Закрыть форму создания.
-     *
-     * @return void
-     */
-    public function closeCreate(): void
-    {
-        $this->resetFields();
-        $this->displayData = false;
-    }
-
-    /**
      * Добавить пользователя.
      *
      * @return void
@@ -154,7 +143,7 @@ class UserIndexWire extends Component
             __("Password") . ": $newPassword"
         ]));
 
-        $this->closeCreate();
+        $this->closeData();
         $this->resetPage();
     }
 
@@ -184,7 +173,7 @@ class UserIndexWire extends Component
      *
      * @return void
      */
-    public function closeEdit(): void
+    public function closeData(): void
     {
         $this->resetFields();
         $this->displayData = false;

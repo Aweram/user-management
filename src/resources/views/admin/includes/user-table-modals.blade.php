@@ -32,7 +32,7 @@
             </div>
 
             <div class="flex items-center space-x-indent-half">
-                <button type="button" class="btn btn-outline-dark" wire:click="closeEdit">
+                <button type="button" class="btn btn-outline-dark" wire:click="closeData">
                     {{ __("Cancel") }}
                 </button>
                 <button type="submit" form="dataForm" class="btn btn-primary"
