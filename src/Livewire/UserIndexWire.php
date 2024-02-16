@@ -142,7 +142,6 @@ class UserIndexWire extends Component
             __("User successfully added"),
             __("Password") . ": $newPassword"
         ]));
-
         $this->closeData();
         $this->resetPage();
     }
@@ -164,7 +163,7 @@ class UserIndexWire extends Component
             $this->displayData = true;
         } catch (\Exception $ex) {
             session()->flash("error", __("User not found"));
-            $this->closeEdit();
+            $this->closeData();
         }
     }
 
@@ -198,13 +197,12 @@ class UserIndexWire extends Component
             ]);
 
             session()->flash("success", __("User successfully updated"));
-
-            $this->resetPage();
         } catch (Exception $ex) {
             session()->flash("error", __("Error while update"));
         }
 
-        $this->closeEdit();
+        $this->resetPage();
+        $this->closeData();
     }
 
     /**
@@ -247,6 +245,7 @@ class UserIndexWire extends Component
                 session()->flash("error", __("User not found"));
             }
         }
+        $this->resetPage();
         $this->closeDelete();
     }
 
