@@ -8,5 +8,5 @@ Route::middleware(["web", 'auth'])
     ->group(function () {
         Route::get(config("user-management.pageUrl"), function () {
             return view("um::admin.users");
-        })->name("users");
+        })->name("users")->middleware("can:viewAny,App\Models\User");
     });

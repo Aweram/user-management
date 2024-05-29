@@ -2,7 +2,10 @@
 
 namespace Aweram\UserManagement;
 
+use App\Models\User;
 use Aweram\UserManagement\Livewire\UserIndexWire;
+use Aweram\UserManagement\Policies\UserPolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 
@@ -19,6 +22,11 @@ class UserManagementServiceProvider extends ServiceProvider
             "um-users",
             $component ?? UserIndexWire::class
         );
+
+        // Policy
+        if (config("user-management.usePolicy")) {
+            Gate::policy(User::class, UserPolicy::class);
+        }
     }
 
     public function register(): void

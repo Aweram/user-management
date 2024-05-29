@@ -15,5 +15,7 @@
     "User successfully updated": "Пользователь обновлен",
     "User successfully deleted": "Пользователь удален",
     "User not found": "Пользователь не найден",
-    "Error while update": "Ошибка обновления"
+    "Error while update": "Ошибка обновления",
+    "Unauthorized action": "Неавторизованное действие",
+    "Can't delete yourself": "Невозможно удалить себя"
 }

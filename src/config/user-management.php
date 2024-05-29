@@ -4,5 +4,6 @@ return [
     'pageUrl' => '/users',
     'customIndexComponent' => null,
     'prefix' => 'admin',
-    'as' => "admin."
+    'as' => "admin.",
+    "usePolicy" => true,
 ];

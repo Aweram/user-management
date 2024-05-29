@@ -5,6 +5,7 @@ namespace Aweram\UserManagement\Livewire;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -120,6 +121,10 @@ class UserIndexWire extends Component
     public function showCreate(): void
     {
         $this->resetFields();
+        // Проверить авторизацию
+        $check = $this->checkAuth("create");
+        if (! $check) return;
+
         $this->displayData = true;
     }
 
@@ -130,6 +135,10 @@ class UserIndexWire extends Component
      */
     public function store(): void
     {
+        // Проверить авторизацию
+        $check = $this->checkAuth("create");
+        if (! $check) return;
+        // Валидация
         $this->validate();
         $newPassword = Str::random(8);
         User::create([
@@ -155,16 +164,17 @@ class UserIndexWire extends Component
     public function showEdit(int $userId): void
     {
         $this->resetFields();
-        try {
-            $user = User::findOrFail($userId);
-            $this->userId = $userId;
-            $this->name = $user->name;
-            $this->email = $user->email;
-            $this->displayData = true;
-        } catch (\Exception $ex) {
-            session()->flash("error", __("User not found"));
-            $this->closeData();
-        }
+        $this->userId = $userId;
+        // Найти пользователя
+        $user = $this->findUser();
+        if (! $user) return;
+        // Проверить авторизацию
+        $check = $this->checkAuth("update", $user);
+        if (! $check) return;
+
+        $this->name = $user->name;
+        $this->email = $user->email;
+        $this->displayData = true;
     }
 
     /**
@@ -185,17 +195,19 @@ class UserIndexWire extends Component
      */
     public function update(): void
     {
+        // Найти пользователя
+        $user = $this->findUser();
+        if (! $user) return;
+        // Проверить авторизацию
+        $check = $this->checkAuth("update", $user);
+        if (! $check) return;
+        // Валидация
         $this->validate();
         try {
-            $user = User::findOrFail($this->userId);
-            /**
-             * @var User $user
-             */
             $user->update([
                 "name" => $this->name,
                 "email" => $this->email
             ]);
-
             session()->flash("success", __("User successfully updated"));
         } catch (Exception $ex) {
             session()->flash("error", __("Error while update"));
@@ -215,6 +227,13 @@ class UserIndexWire extends Component
     {
         $this->resetFields();
         $this->userId = $userId;
+        // Найти пользователя
+        $user = $this->findUser();
+        if (! $user) return;
+        // Проверить авторизацию
+        $check = $this->checkAuth("delete", $user);
+        if (! $check) return;
+
         $this->displayDelete = true;
     }
 
@@ -236,15 +255,30 @@ class UserIndexWire extends Component
      */
     public function confirmDelete(): void
     {
+        // Найти пользователя
+        $user = $this->findUser();
+        if (! $user) {
+            $this->closeDelete();
+            return;
+        }
+        // Проверить авторизацию
+        $check = $this->checkAuth("delete", $user);
+        if (! $check) {
+            $this->closeDelete();
+            return;
+        }
+
         if ($this->userId !== Auth::id()) {
             try {
-                $user = User::find($this->userId);
                 $user->delete();
                 session()->flash("success", __("User successfully deleted"));
             } catch (Exception $ex) {
                 session()->flash("error", __("User not found"));
             }
+        } else {
+            session()->flash("error", __("Can't delete yourself"));
         }
+
         $this->resetPage();
         $this->closeDelete();
     }
@@ -257,5 +291,31 @@ class UserIndexWire extends Component
     private function resetFields(): void
     {
         $this->reset(["name", "email", "userId"]);
+    }
+
+    /**
+     * @return User|null
+     */
+    private function findUser(): ?User
+    {
+        $user = User::find($this->userId);
+        if (! $user) {
+            session()->flash("error", __("User not found"));
+            $this->closeData();
+            return null;
+        }
+        return $user;
+    }
+
+    private function checkAuth(string $action, User $user = null): bool
+    {
+        try {
+            $this->authorize($action, $user ?? User::class);
+            return true;
+        } catch (\Exception $ex) {
+            session()->flash("error", __("Unauthorized action"));
+            $this->closeData();
+            return false;
+        }
     }
 }
