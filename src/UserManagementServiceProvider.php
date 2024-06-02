@@ -36,6 +36,9 @@ class UserManagementServiceProvider extends ServiceProvider
         );
 
         // Policy
+        Gate::before(function (User $user, string $ability) {
+            if ($user->super) return true;
+        });
         Gate::policy(User::class, config("user-management.userPolicy"));
         Gate::policy(Role::class, config("user-management.rolePolicy"));
 

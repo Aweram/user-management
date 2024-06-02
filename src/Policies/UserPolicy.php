@@ -29,7 +29,7 @@ class UserPolicy implements PolicyPermissionInterface
 
     public function create(User $user): bool
     {
-        return true;
+        return false;
     }
 
     public function update(User $user, User $model): bool
