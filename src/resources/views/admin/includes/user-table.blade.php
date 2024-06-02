@@ -30,16 +30,16 @@
                 <td>
                     <div class="flex justify-center">
                         <button type="button" class="btn btn-dark px-btn-x-ico rounded-e-none"
-                                @cannot("update", $item) disabled @endcannot
-                                wire:loading.attr="disabled"
+                                @cannot("update", $item) disabled
+                                @else wire:loading.attr="disabled"
+                                @endcannot
                                 wire:click="showEdit({{ $item->id }})">
                             <x-tt::ico.edit />
                         </button>
                         <button type="button" class="btn btn-danger px-btn-x-ico rounded-s-none"
-                                @can("delete", $item) @if ($item->id === Auth::id()) disabled @endif
+                                @can("delete", $item) @if ($item->id === Auth::id()) disabled @else wire:loading.attr="disabled" @endif
                                 @else disabled
                                 @endcan
-                                wire:loading.attr="disabled"
                                 wire:click="showDelete({{ $item->id }})">
                             <x-tt::ico.trash />
                         </button>

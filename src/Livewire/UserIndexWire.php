@@ -76,7 +76,7 @@ class UserIndexWire extends Component
      */
     public function render(): View
     {
-        $query = User::query()->select("id", "name", "email")->with("roles:id,title");
+        $query = User::query()->select("id", "name", "email", "super")->with("roles:id,title");
         if (! empty($this->searchName)) {
             $value = trim($this->searchName);
             $query->where("name", "like", "%$value%");

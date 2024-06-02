@@ -29,16 +29,18 @@ class UserPolicy implements PolicyPermissionInterface
 
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     public function update(User $user, User $model): bool
     {
+        if ($model->super && $user->id != $model->id) return false;
         return true;
     }
 
     public function delete(User $user, User $model): bool
     {
+        if ($model->super) return false;
         return true;
     }
 }
