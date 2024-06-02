@@ -3,8 +3,9 @@
 namespace Aweram\UserManagement\Policies;
 
 use App\Models\User;
+use Aweram\UserManagement\Models\Role;
 
-class UserPolicy
+class RolePolicy
 {
     public function viewAny(User $user): bool
     {
@@ -16,12 +17,12 @@ class UserPolicy
         return true;
     }
 
-    public function update(User $user, User $model): bool
+    public function update(User $user, Role $role): bool
     {
         return true;
     }
 
-    public function delete(User $user, User $model): bool
+    public function delete(User $user, Role $role): bool
     {
         return true;
     }

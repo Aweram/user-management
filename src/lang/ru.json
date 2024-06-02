@@ -17,5 +17,6 @@
     "User not found": "Пользователь не найден",
     "Error while update": "Ошибка обновления",
     "Unauthorized action": "Неавторизованное действие",
-    "Can't delete yourself": "Невозможно удалить себя"
+    "Can't delete yourself": "Невозможно удалить себя",
+    "Roles": "Роли"
 }

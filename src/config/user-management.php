@@ -6,4 +6,5 @@ return [
     'prefix' => 'admin',
     'as' => "admin.",
     "usePolicy" => true,
+    "rolesUrl" => "/roles",
 ];
