@@ -2,6 +2,7 @@
 
 namespace Aweram\UserManagement\Livewire;
 
+use Aweram\UserManagement\Facades\PermissionActions;
 use Aweram\UserManagement\Models\Permission;
 use Aweram\UserManagement\Models\Role;
 use Illuminate\Database\Eloquent\Collection;
@@ -195,18 +196,7 @@ class RoleIndexWire extends Component
         $this->displayPermissions = true;
         $this->permissionTitle = $permission->title;
         $this->permissionList = $permission->policy::getPermissions();
-        // Получить текущие права доступа
-        $currentPermission = $role->permissions()
-            ->select("id", "policy")
-            ->where("permission_id", $permission->id)
-            ->first();
-
-        if ($currentPermission) {
-            $rights = $currentPermission->pivot->rights;
-            foreach ($currentPermission->policy::getPermissions() as $key => $value) {
-                if ($rights & $key) $this->rolePermissions[] = $key;
-            }
-        }
+        $this->rolePermissions = PermissionActions::getRightsListByRolePermission($role, $permission);
     }
 
     public function updatePermissions(): void
@@ -221,29 +211,7 @@ class RoleIndexWire extends Component
         $check = $this->checkAuth("update", $role);
         if (! $check) return;
 
-        $rights = 0;
-        foreach ($this->rolePermissions as $item) {
-            $rights += $item;
-        }
-
-        $exist = false;
-        $role->load("permissions");
-        foreach ($role->permissions as $item) {
-            if ($item->key == $permission->key) {
-                $exist = true;
-                break;
-            }
-        }
-
-        if ($exist) {
-            $role->permissions()->updateExistingPivot($permission->id, [
-                "rights" => $rights
-            ]);
-        } else {
-            $role->permissions()->save($permission, [
-                "rights" => $rights
-            ]);
-        }
+        PermissionActions::setPermissionByRoleRights($role, $permission, $this->rolePermissions);
 
         $this->closePermissions();
     }

@@ -24,11 +24,6 @@ class RolePolicy implements PolicyPermissionInterface
         ];
     }
 
-    public static function defaultPermissions(): int
-    {
-        return 0;
-    }
-
     public function viewAny(User $user): bool
     {
         return true;

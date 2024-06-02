@@ -4,6 +4,7 @@ namespace Aweram\UserManagement;
 
 use App\Models\User;
 use Aweram\UserManagement\Commands\CreatePermissionsCommand;
+use Aweram\UserManagement\Helpers\PermissionActionsManager;
 use Aweram\UserManagement\Livewire\RoleIndexWire;
 use Aweram\UserManagement\Livewire\UserIndexWire;
 use Aweram\UserManagement\Models\Role;
@@ -61,6 +62,11 @@ class UserManagementServiceProvider extends ServiceProvider
 
         // Подключение переводов
         $this->loadJsonTranslationsFrom(__DIR__ . "/lang");
+
+        // Facades
+        $this->app->singleton("permission-actions", function () {
+            return new PermissionActionsManager;
+        });
 
         // Commands.
         if ($this->app->runningInConsole()) {
