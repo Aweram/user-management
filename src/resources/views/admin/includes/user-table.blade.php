@@ -11,6 +11,7 @@
                                  :direction="$sortBy == 'email' ? $sortDirection : null">
                 E-mail
             </x-tt::table.heading>
+            <x-tt::table.heading class="text-left">{{ __("Roles") }}</x-tt::table.heading>
             <x-tt::table.heading>{{ __("Actions") }}</x-tt::table.heading>
         </tr>
     </x-slot>
@@ -19,6 +20,13 @@
             <tr>
                 <td>{{ $item->name }}</td>
                 <td>{{ $item->email }}</td>
+                <td>
+                    <ul>
+                        @foreach($item->roles as $role)
+                            <li>{{ $role->title }}</li>
+                        @endforeach
+                    </ul>
+                </td>
                 <td>
                     <div class="flex justify-center">
                         <button type="button" class="btn btn-dark px-btn-x-ico rounded-e-none"

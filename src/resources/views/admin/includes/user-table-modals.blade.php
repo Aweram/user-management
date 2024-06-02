@@ -31,6 +31,26 @@
                 <x-tt::form.error name="email" />
             </div>
 
+            <div>
+                <div class="inline-block mb-2">
+                    {{ __("Roles") }}
+                </div>
+                @isset($rolesList)
+                    <div class="space-y-indent-half">
+                        @foreach($rolesList as $item)
+                            <div class="form-check">
+                                <input type="checkbox" wire:model="roles"
+                                       class="form-check-input" id="role-{{ $item->id }}"
+                                       value="{{ $item->id }}">
+                                <label for="role-{{ $item->id }}" class="form-check-label">
+                                    {{ $item->title }}
+                                </label>
+                            </div>
+                        @endforeach
+                    </div>
+                @endisset
+            </div>
+
             <div class="flex items-center space-x-indent-half">
                 <button type="button" class="btn btn-outline-dark" wire:click="closeData">
                     {{ __("Cancel") }}

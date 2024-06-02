@@ -3,7 +3,9 @@
 namespace Aweram\UserManagement\Livewire;
 
 use App\Models\User;
+use Aweram\UserManagement\Models\Role;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
@@ -27,6 +29,9 @@ class UserIndexWire extends Component
 
     public string $name = "";
     public string $email = "";
+    public array $roles = [];
+
+    public Collection $rolesList;
 
     protected function queryString(): array
     {
@@ -71,7 +76,7 @@ class UserIndexWire extends Component
      */
     public function render(): View
     {
-        $query = User::query()->select("id", "name", "email");
+        $query = User::query()->select("id", "name", "email")->with("roles:id,title");
         if (! empty($this->searchName)) {
             $value = trim($this->searchName);
             $query->where("name", "like", "%$value%");
@@ -126,6 +131,7 @@ class UserIndexWire extends Component
         if (! $check) return;
 
         $this->displayData = true;
+        $this->getRoles();
     }
 
     /**
@@ -141,11 +147,15 @@ class UserIndexWire extends Component
         // Валидация
         $this->validate();
         $newPassword = Str::random(8);
-        User::create([
+        $user = User::create([
             "name" => $this->name,
             "email" => $this->email,
             "password" => Hash::make($newPassword)
         ]);
+        /**
+         * @var User $user
+         */
+        $user->roles()->sync($this->roles);
 
         session()->flash("success", implode(", ", [
             __("User successfully added"),
@@ -174,7 +184,12 @@ class UserIndexWire extends Component
 
         $this->name = $user->name;
         $this->email = $user->email;
+        $user->load("roles:id");
+        foreach ($user->roles as $item) {
+            $this->roles[] = $item->id;
+        }
         $this->displayData = true;
+        $this->getRoles();
     }
 
     /**
@@ -197,6 +212,8 @@ class UserIndexWire extends Component
                 "name" => $this->name,
                 "email" => $this->email
             ]);
+
+            $user->roles()->sync($this->roles);
             session()->flash("success", __("User successfully updated"));
         } catch (Exception $ex) {
             session()->flash("error", __("Error while update"));
@@ -284,7 +301,7 @@ class UserIndexWire extends Component
      */
     private function resetFields(): void
     {
-        $this->reset(["name", "email", "userId"]);
+        $this->reset(["name", "email", "userId", "roles"]);
     }
 
     /**
@@ -312,5 +329,13 @@ class UserIndexWire extends Component
             $this->closeDelete();
             return false;
         }
+    }
+
+    private function getRoles(): void
+    {
+        $this->rolesList = Role::query()
+            ->select("id", "title")
+            ->orderBy("title")
+            ->get();
     }
 }
