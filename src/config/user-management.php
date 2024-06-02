@@ -6,6 +6,7 @@ return [
     'prefix' => 'admin',
     'as' => "admin.",
     "usePolicy" => true,
+    "customUserObserver" => null,
 
     "rolesUrl" => "/roles",
     "customRoleIndexComponent" => null,

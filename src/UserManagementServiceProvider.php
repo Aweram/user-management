@@ -5,6 +5,7 @@ namespace Aweram\UserManagement;
 use App\Models\User;
 use Aweram\UserManagement\Livewire\RoleIndexWire;
 use Aweram\UserManagement\Livewire\UserIndexWire;
+use Aweram\UserManagement\Observers\UserObserver;
 use Aweram\UserManagement\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -35,6 +36,10 @@ class UserManagementServiceProvider extends ServiceProvider
         if (config("user-management.usePolicy")) {
             Gate::policy(User::class, UserPolicy::class);
         }
+
+        // Наблюдатели
+        $userObserverClass = config("user-management.customUserObserver") ?? UserObserver::class;
+        User::observe($userObserverClass);
     }
 
     public function register(): void
