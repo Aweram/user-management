@@ -31,5 +31,10 @@
     "It will be impossible to restore the role!": "Будет невозможно восстановить роль!",
 
     "Permission not found": "Права доступа не найдены",
-    "Edit permissions": "Редактировать права доступа"
+    "Edit permissions": "Редактировать права доступа",
+
+    "View all": "Просмотр всех",
+    "Creating": "Создание",
+    "Updating": "Обновление",
+    "Deleting": "Удаление"
 }

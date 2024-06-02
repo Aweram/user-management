@@ -7,9 +7,19 @@ use Aweram\UserManagement\Interfaces\PolicyPermissionInterface;
 
 class UserPolicy implements PolicyPermissionInterface
 {
+    const VIEW_ALL = 2;
+    const CREATE = 4;
+    const UPDATE = 8;
+    const DELETE = 16;
+
     public static function getPermissions(): array
     {
-        return [];
+        return [
+            self::VIEW_ALL => __("View all"),
+            self::CREATE => __("Creating"),
+            self::UPDATE => __("Updating"),
+            self::DELETE => __("Deleting")
+        ];
     }
 
     public static function defaultPermissions(): int

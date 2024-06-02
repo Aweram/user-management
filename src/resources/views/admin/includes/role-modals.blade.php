@@ -4,9 +4,32 @@
 </x-tt::modal.confirm>
 
 <x-tt::modal.aside wire:model="displayPermissions">
-    <x-slot name="title">{{ $permissionTitle }}</x-slot>
+    <x-slot name="title">{{ $permissionTitle ?? __("Edit permissions") }}</x-slot>
     <x-slot name="content">
-        
+        <form wire:submit.prevent="updatePermissions" class="space-y-indent-half" id="permissionForm">
+            <div class="space-y-indent-half">
+                @foreach($permissionList as $key => $value)
+                    <div class="form-check">
+                        <input type="checkbox" wire:model="rolePermissions"
+                               class="form-check-input" id="permission-{{ $key }}"
+                               value="{{ $key }}">
+                        <label for="permission-{{ $key }}" class="form-check-label">
+                            {{ $value }}
+                        </label>
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="flex items-center space-x-indent-half">
+                <button type="button" class="btn btn-outline-dark" wire:click="closePermissions">
+                    {{ __("Cancel") }}
+                </button>
+                <button type="submit" form="permissionForm" class="btn btn-primary"
+                        wire:loading.attr="disabled">
+                    {{ __("Update") }}
+                </button>
+            </div>
+        </form>
     </x-slot>
 </x-tt::modal.aside>
 
