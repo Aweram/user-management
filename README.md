@@ -7,3 +7,5 @@
 ### Установка
 
 Добавить `"./vendor/aweram/user-management/src/resources/views/**/*.blade.php"` в `tailwind.admin.config.js`, созданный в пакете `tailwindcss-theme`.
+
+Добавить трейт `use ShouldRole;` (use Aweram\UserManagement\Traits\ShouldRole;) в класс пользователя.

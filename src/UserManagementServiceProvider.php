@@ -31,6 +31,9 @@ class UserManagementServiceProvider extends ServiceProvider
 
     public function register(): void
     {
+        // Миграции.
+        $this->loadMigrationsFrom(__DIR__ . "/database/migrations");
+
         // Подключение конфигурации
         $this->mergeConfigFrom(
             __DIR__ . "/config/user-management.php", "user-management"
