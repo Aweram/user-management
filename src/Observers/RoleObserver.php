@@ -9,5 +9,6 @@ class RoleObserver
     public function deleted(Role $role)
     {
         $role->users()->sync([]);
+        $role->permissions()->sync([]);
     }
 }
