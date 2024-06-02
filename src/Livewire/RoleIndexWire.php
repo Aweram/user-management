@@ -2,6 +2,7 @@
 
 namespace Aweram\UserManagement\Livewire;
 
+use Aweram\UserManagement\Models\Permission;
 use Aweram\UserManagement\Models\Role;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -16,6 +17,11 @@ class RoleIndexWire extends Component
 
     public string $name = "";
     public string $title = "";
+    public int|null $permissionId = null;
+
+    public bool $displayPermissions = false;
+    public string $permissionTitle = "";
+    public array $rolePermissions = [];
 
     public function rules(): array
     {
@@ -43,9 +49,15 @@ class RoleIndexWire extends Component
     {
         $query = Role::query()->select("id", "name", "title");
         $query->orderBy("title");
+        $roles = $query->paginate();
+
+        $query = Permission::query()->select("id", "key", "title");
+        $query->orderBy("title");
+        $permissions = $query->get();
 
         return view('um::livewire.admin.roles', [
-            "roles" => $query->paginate()
+            "roles" => $roles,
+            "permissions" => $permissions,
         ]);
     }
 
@@ -163,9 +175,35 @@ class RoleIndexWire extends Component
         $this->closeDelete();
     }
 
+    public function showPermissions(int $permissionId, int $roleId): void
+    {
+        $this->resetFields();
+        $this->roleId = $roleId;
+        $this->permissionId = $permissionId;
+        // Найти роль
+        $role = $this->findRole();
+        if (! $role) return;
+        // Найти права доступа
+        $permission = $this->findPermission();
+        if (! $permission) return;
+        // Проверить авторизацию
+        $check = $this->checkAuth("update", $role);
+        if (! $check) return;
+
+        $this->displayPermissions = true;
+        $this->permissionTitle = $permission->title;
+        $role->load("permissions:id");
+        // TODO: set up permissions
+    }
+
+    public function closePermissions()
+    {
+
+    }
+
     private function resetFields(): void
     {
-        $this->reset(["name", "title", "roleId"]);
+        $this->reset(["name", "title", "roleId", "rolePermissions", "permissionId", "permissionTitle"]);
     }
 
     private function checkAuth(string $action, Role $role = null): bool
@@ -176,6 +214,8 @@ class RoleIndexWire extends Component
         } catch (\Exception $ex) {
             session()->flash("error", __("Unauthorized action"));
             $this->closeData();
+            $this->closePermissions();
+            $this->closeDelete();
             return false;
         }
     }
@@ -190,5 +230,16 @@ class RoleIndexWire extends Component
             return null;
         }
         return $role;
+    }
+
+    private function findPermission(): ?Permission
+    {
+        $permission = Permission::find($this->permissionId);
+        if (! $permission) {
+            session()->flash("error", __("Permission not found"));
+            $this->closePermissions();
+            return null;
+        }
+        return $permission;
     }
 }

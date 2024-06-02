@@ -3,6 +3,13 @@
     <x-slot name="text">{{ __("It will be impossible to restore the role!") }}</x-slot>
 </x-tt::modal.confirm>
 
+<x-tt::modal.aside wire:model="displayPermissions">
+    <x-slot name="title">{{ $permissionTitle }}</x-slot>
+    <x-slot name="content">
+        
+    </x-slot>
+</x-tt::modal.aside>
+
 <x-tt::modal.aside wire:model="displayData">
     <x-slot name="title">{{ $roleId ? __("Edit role") : __("Add role") }}</x-slot>
     <x-slot name="content">

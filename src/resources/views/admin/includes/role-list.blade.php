@@ -22,7 +22,14 @@
             </div>
         </div>
         <div class="card-body">
-            Permissions
+            <div class="flex items-center justify-start flex-wrap">
+                @foreach($permissions as $permission)
+                    <button type="button" wire:click="showPermissions({{ $permission->id }}, {{ $item->id }})"
+                            class="btn btn-outline-dark mr-indent-half my-indent-half">
+                        {{ $permission->title }}
+                    </button>
+                @endforeach
+            </div>
         </div>
     </div>
 @endforeach
