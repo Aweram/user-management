@@ -18,5 +18,10 @@
     "Error while update": "Ошибка обновления",
     "Unauthorized action": "Неавторизованное действие",
     "Can't delete yourself": "Невозможно удалить себя",
-    "Roles": "Роли"
+
+    "Roles": "Роли",
+    "Title": "Заголовок",
+    "Role successfully added": "Роль успешно добавлена",
+    "Edit role": "Редактировать роль",
+    "Add role": "Добавить роль"
 }

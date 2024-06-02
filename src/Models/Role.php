@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Role extends Model
 {
+    // TODO: add observer on delete
     use HasFactory;
 
     protected $fillable = [

@@ -3,6 +3,7 @@
 namespace Aweram\UserManagement;
 
 use App\Models\User;
+use Aweram\UserManagement\Livewire\RoleIndexWire;
 use Aweram\UserManagement\Livewire\UserIndexWire;
 use Aweram\UserManagement\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -17,10 +18,17 @@ class UserManagementServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . "/resources/views", "um");
 
         // Livewire
+        // Users
         $component = config("user-management.customIndexComponent");
         Livewire::component(
             "um-users",
             $component ?? UserIndexWire::class
+        );
+        // Roles
+        $component = config("user-management.customRoleIndexComponent");
+        Livewire::component(
+            "um-roles",
+            $component ?? RoleIndexWire::class
         );
 
         // Policy
