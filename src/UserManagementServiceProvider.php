@@ -5,6 +5,7 @@ namespace Aweram\UserManagement;
 use App\Models\User;
 use Aweram\UserManagement\Livewire\RoleIndexWire;
 use Aweram\UserManagement\Livewire\UserIndexWire;
+use Aweram\UserManagement\Models\Role;
 use Aweram\UserManagement\Observers\UserObserver;
 use Aweram\UserManagement\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -33,13 +34,15 @@ class UserManagementServiceProvider extends ServiceProvider
         );
 
         // Policy
-        if (config("user-management.usePolicy")) {
-            Gate::policy(User::class, UserPolicy::class);
-        }
+        Gate::policy(User::class, config("user-management.userPolicy"));
+        Gate::policy(Role::class, config("user-management.rolePolicy"));
 
         // Наблюдатели
         $userObserverClass = config("user-management.customUserObserver") ?? UserObserver::class;
         User::observe($userObserverClass);
+
+        // Добавить политики в конфигурацию
+        $this->expandConfiguration();
     }
 
     public function register(): void
@@ -57,5 +60,22 @@ class UserManagementServiceProvider extends ServiceProvider
 
         // Подключение переводов
         $this->loadJsonTranslationsFrom(__DIR__ . "/lang");
+    }
+
+    private function expandConfiguration(): void
+    {
+        $um = app()->config["user-management"];
+        $permissions = $um["permissions"];
+        $permissions[] = [
+            "title" => $um["userPolicyTitle"],
+            "policy" => $um["userPolicy"],
+            "key" => $um["userPolicyKey"]
+        ];
+        $permissions[] = [
+            "title" => $um["rolePolicyTitle"],
+            "policy" => $um["rolePolicy"],
+            "key" => $um["rolePolicyKey"]
+        ];
+        app()->config["user-management.permissions"] = $permissions;
     }
 }

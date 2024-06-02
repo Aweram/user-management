@@ -3,6 +3,8 @@
         <div class="card">
             <div class="card-body">
                 @include("um::admin.includes.role-search")
+                <x-tt::notifications.error />
+                <x-tt::notifications.success />
             </div>
         </div>
 
