@@ -77,10 +77,90 @@ class RoleIndexWire extends Component
         $this->resetPage();
     }
 
+    public function showEdit(int $roleId): void
+    {
+        $this->resetFields();
+        $this->roleId = $roleId;
+        // Найти роль
+        $role = $this->findRole();
+        if (! $role) return;
+        // Проверить авторизацию
+        $check = $this->checkAuth("update", $role);
+        if (! $check) return;
+
+        $this->name = $role->name;
+        $this->title = $role->title;
+        $this->displayData = true;
+    }
+
+    public function update(): void
+    {
+        // Найти роль
+        $role = $this->findRole();
+        if (! $role) return;
+        // Проверить авторизацию
+        $check = $this->checkAuth("update", $role);
+        if (! $check) return;
+        // Валидация
+        $this->validate();
+        try {
+            $role->update([
+                "name" => $this->name,
+                "title" => $this->title,
+            ]);
+            session()->flash("success", __("Role successfully updated"));
+        } catch (\Exception $ex) {
+            session()->flash("error", __("Error while update"));
+        }
+
+        $this->resetPage();
+        $this->closeData();
+    }
+
     public function closeData(): void
     {
         $this->resetFields();
         $this->displayData = false;
+    }
+
+    public function showDelete(int $roleId): void
+    {
+        $this->resetFields();
+        $this->roleId = $roleId;
+        // Найти роль
+        $role = $this->findRole();
+        if (! $role) return;
+        // Проверить авторизацию
+        $check = $this->checkAuth("delete", $role);
+        if (! $check) return;
+
+        $this->displayDelete = true;
+    }
+
+    public function closeDelete(): void
+    {
+        $this->displayDelete = false;
+        $this->resetFields();
+    }
+
+    public function confirmDelete(): void
+    {
+        // Найти роль
+        $role = $this->findRole();
+        if (! $role) return;
+        // Проверить авторизацию
+        $check = $this->checkAuth("delete", $role);
+        if (! $check) return;
+
+        try {
+            $role->delete();
+            session()->flash("success", __("Role successfully deleted"));
+        } catch (\Exception $ex) {
+            session()->flash("error", __("Role not found"));
+        }
+
+        $this->resetPage();
+        $this->closeDelete();
     }
 
     private function resetFields(): void
@@ -98,5 +178,17 @@ class RoleIndexWire extends Component
             $this->closeData();
             return false;
         }
+    }
+
+    private function findRole(): ?Role
+    {
+        $role = Role::find($this->roleId);
+        if (! $role) {
+            session()->flash("error", __("Role not found"));
+            $this->closeData();
+            $this->closeDelete();
+            return null;
+        }
+        return $role;
     }
 }

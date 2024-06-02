@@ -23,5 +23,10 @@
     "Title": "Заголовок",
     "Role successfully added": "Роль успешно добавлена",
     "Edit role": "Редактировать роль",
-    "Add role": "Добавить роль"
+    "Add role": "Добавить роль",
+    "Role not found": "Роль не найдена",
+    "Role successfully updated": "Роль успешно обновлена",
+    "Role successfully deleted": "Роль успешно удалена",
+    "Delete role": "Удалить роль",
+    "It will be impossible to restore the role!": "Будет невозможно восстановить роль!"
 }

@@ -1,3 +1,8 @@
+<x-tt::modal.confirm wire:model="displayDelete">
+    <x-slot name="title">{{ __("Delete role") }}</x-slot>
+    <x-slot name="text">{{ __("It will be impossible to restore the role!") }}</x-slot>
+</x-tt::modal.confirm>
+
 <x-tt::modal.aside wire:model="displayData">
     <x-slot name="title">{{ $roleId ? __("Edit role") : __("Add role") }}</x-slot>
     <x-slot name="content">

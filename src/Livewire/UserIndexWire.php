@@ -178,17 +178,6 @@ class UserIndexWire extends Component
     }
 
     /**
-     * Закрыть форму редактирования.
-     *
-     * @return void
-     */
-    public function closeData(): void
-    {
-        $this->resetFields();
-        $this->displayData = false;
-    }
-
-    /**
      * Обновление пользователя.
      *
      * @return void
@@ -215,6 +204,17 @@ class UserIndexWire extends Component
 
         $this->resetPage();
         $this->closeData();
+    }
+
+    /**
+     * Закрыть форму редактирования.
+     *
+     * @return void
+     */
+    public function closeData(): void
+    {
+        $this->resetFields();
+        $this->displayData = false;
     }
 
     /**
@@ -257,16 +257,10 @@ class UserIndexWire extends Component
     {
         // Найти пользователя
         $user = $this->findUser();
-        if (! $user) {
-            $this->closeDelete();
-            return;
-        }
+        if (! $user) return;
         // Проверить авторизацию
         $check = $this->checkAuth("delete", $user);
-        if (! $check) {
-            $this->closeDelete();
-            return;
-        }
+        if (! $check) return;
 
         if ($this->userId !== Auth::id()) {
             try {
@@ -315,6 +309,7 @@ class UserIndexWire extends Component
         } catch (\Exception $ex) {
             session()->flash("error", __("Unauthorized action"));
             $this->closeData();
+            $this->closeDelete();
             return false;
         }
     }
