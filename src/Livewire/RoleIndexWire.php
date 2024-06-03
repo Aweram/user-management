@@ -212,6 +212,7 @@ class RoleIndexWire extends Component
         if (! $check) return;
 
         PermissionActions::setPermissionByRoleRights($role, $permission, $this->rolePermissions);
+        session()->flash("success", __("Permissions successfully updated"));
 
         $this->closePermissions();
     }

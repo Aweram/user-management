@@ -3,6 +3,7 @@
 namespace Aweram\UserManagement\Livewire;
 
 use App\Models\User;
+use Aweram\UserManagement\Facades\PermissionActions;
 use Aweram\UserManagement\Models\Role;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
@@ -214,6 +215,8 @@ class UserIndexWire extends Component
             ]);
 
             $user->roles()->sync($this->roles);
+            PermissionActions::forgetRoleIds($user);
+
             session()->flash("success", __("User successfully updated"));
         } catch (Exception $ex) {
             session()->flash("error", __("Error while update"));

@@ -4,8 +4,14 @@
 
 Страница содержит таблицу пользователей, полностью на livewire. Есть поиск по двум полям пользователя, добавление, редактирование и удаление.
 
+Есть страница для создания ролей и редактирования прав. В модели Permission добавляются файлы политик, через которые можно настроить права для ролей. 
+
 ### Установка
 
 Добавить `"./vendor/aweram/user-management/src/resources/views/**/*.blade.php"` в `tailwind.admin.config.js`, созданный в пакете `tailwindcss-theme`.
 
 Добавить трейт `use ShouldRole;` (use Aweram\UserManagement\Traits\ShouldRole;) в класс пользователя.
+
+Запустить миграции для создания ролей `php artisan migrate`
+
+Создать права доступа из конфигурации `php artisan um:permissions`

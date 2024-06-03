@@ -3,12 +3,13 @@
 namespace Aweram\UserManagement\Policies;
 
 use App\Models\User;
+use Aweram\UserManagement\Facades\PermissionActions;
 use Aweram\UserManagement\Interfaces\PolicyPermissionInterface;
 use Aweram\UserManagement\Models\Role;
 
 class RolePolicy implements PolicyPermissionInterface
 {
-
+    const PERMISSION_KEY = "roles";
     const VIEW_ALL = 2;
     const CREATE = 4;
     const UPDATE = 8;
@@ -26,21 +27,21 @@ class RolePolicy implements PolicyPermissionInterface
 
     public function viewAny(User $user): bool
     {
-        return true;
+        return PermissionActions::allowedAction($user, self::PERMISSION_KEY, self::VIEW_ALL);
     }
 
     public function create(User $user): bool
     {
-        return true;
+        return PermissionActions::allowedAction($user, self::PERMISSION_KEY, self::CREATE);
     }
 
     public function update(User $user, Role $role): bool
     {
-        return true;
+        return PermissionActions::allowedAction($user, self::PERMISSION_KEY, self::UPDATE);
     }
 
     public function delete(User $user, Role $role): bool
     {
-        return true;
+        return PermissionActions::allowedAction($user, self::PERMISSION_KEY, self::DELETE);
     }
 }

@@ -5,3 +5,4 @@
 #### Обновление:
 - `php artisan migrate`
 - Добавить трейт `use ShouldRole;` (use Aweram\UserManagement\Traits\ShouldRole;) в класс пользователя.
+- `php artisan um:permissions` - создание прав доступа

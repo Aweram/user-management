@@ -25,6 +25,7 @@
             <div class="flex items-center justify-start flex-wrap">
                 @foreach($permissions as $permission)
                     <button type="button" wire:click="showPermissions({{ $permission->id }}, {{ $item->id }})"
+                            @cannot("update", $item) disabled @endcan
                             class="btn btn-outline-dark mr-indent-half my-indent-half">
                         {{ $permission->title }}
                     </button>
