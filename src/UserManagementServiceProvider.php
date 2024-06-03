@@ -3,6 +3,7 @@
 namespace Aweram\UserManagement;
 
 use App\Models\User;
+use Aweram\UserManagement\Commands\ChangeSuperCommand;
 use Aweram\UserManagement\Commands\CreatePermissionsCommand;
 use Aweram\UserManagement\Helpers\PermissionActionsManager;
 use Aweram\UserManagement\Livewire\RoleIndexWire;
@@ -75,6 +76,7 @@ class UserManagementServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 CreatePermissionsCommand::class,
+                ChangeSuperCommand::class,
             ]);
         }
     }
