@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string("title")
                 ->nullable()
                 ->comment("Заголовок");
+            $table->dateTime("management")
+                ->comment("Доступ к управлению сайтом")
+                ->nullable();
             $table->timestamps();
         });
     }

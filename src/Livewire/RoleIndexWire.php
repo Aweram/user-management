@@ -19,6 +19,7 @@ class RoleIndexWire extends Component
 
     public string $name = "";
     public string $title = "";
+    public bool $management = false;
     public int|null $permissionId = null;
 
     public bool $displayPermissions = false;
@@ -84,7 +85,8 @@ class RoleIndexWire extends Component
 
         Role::create([
             "name" => $this->name,
-            "title" => $this->title
+            "title" => $this->title,
+            "management" => $this->management ? now() : null,
         ]);
 
         session()->flash("success", __("Role successfully added"));
@@ -105,6 +107,7 @@ class RoleIndexWire extends Component
 
         $this->name = $role->name;
         $this->title = $role->title;
+        $this->management = ! empty($role->management);
         $this->displayData = true;
     }
 
@@ -122,6 +125,7 @@ class RoleIndexWire extends Component
             $role->update([
                 "name" => $this->name,
                 "title" => $this->title,
+                "management" => $this->management ? now() : null,
             ]);
             session()->flash("success", __("Role successfully updated"));
         } catch (\Exception $ex) {
@@ -225,7 +229,7 @@ class RoleIndexWire extends Component
 
     private function resetFields(): void
     {
-        $this->reset(["name", "title", "roleId", "rolePermissions", "permissionId", "permissionTitle"]);
+        $this->reset(["name", "title", "roleId", "rolePermissions", "permissionId", "permissionTitle", "management"]);
     }
 
     private function checkAuth(string $action, Role $role = null): bool

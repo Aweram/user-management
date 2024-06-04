@@ -7,6 +7,14 @@ use Aweram\UserManagement\Models\Role;
 
 class RoleObserver
 {
+    public function updated(Role $role): void
+    {
+        $users = $role->users()->select("id")->get();
+        foreach ($users as $user) {
+            PermissionActions::forgetManagementAccess($user);
+        }
+    }
+
     public function deleted(Role $role): void
     {
         $users = $role->users()->select("id")->get();

@@ -5,7 +5,9 @@ namespace Aweram\UserManagement;
 use App\Models\User;
 use Aweram\UserManagement\Commands\ChangeSuperCommand;
 use Aweram\UserManagement\Commands\CreatePermissionsCommand;
+use Aweram\UserManagement\Facades\PermissionActions;
 use Aweram\UserManagement\Helpers\PermissionActionsManager;
+use Aweram\UserManagement\Http\Middleware\AppManagement;
 use Aweram\UserManagement\Livewire\RoleIndexWire;
 use Aweram\UserManagement\Livewire\UserIndexWire;
 use Aweram\UserManagement\Models\Role;
@@ -36,12 +38,18 @@ class UserManagementServiceProvider extends ServiceProvider
             $component ?? RoleIndexWire::class
         );
 
+        // Middleware
+        $this->app["router"]->aliasMiddleware("app-management", AppManagement::class);
+
         // Policy
         Gate::before(function (User $user, string $ability) {
             if ($user->super) return true;
         });
         Gate::policy(User::class, config("user-management.userPolicy"));
         Gate::policy(Role::class, config("user-management.rolePolicy"));
+        Gate::define("app-management", function (User $user) {
+            return PermissionActions::checkManagementAccess($user);
+        });
 
         // Наблюдатели
         $userObserverClass = config("user-management.customUserObserver") ?? UserObserver::class;

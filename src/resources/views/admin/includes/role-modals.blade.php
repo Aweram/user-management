@@ -62,6 +62,14 @@
                 <x-tt::form.error name="title" />
             </div>
 
+            <div class="form-check">
+                <input type="checkbox" wire:model="management"
+                       class="form-check-input" id="app-management">
+                <label for="app-management" class="form-check-label">
+                    {{ __("App management") }}
+                </label>
+            </div>
+
             <div class="flex items-center space-x-indent-half">
                 <button type="button" class="btn btn-outline-dark" wire:click="closeData">
                     {{ __("Cancel") }}

@@ -12,6 +12,23 @@ class PermissionActionsManager
 {
     const PERMISSION_KEY = "roleRule";
     const ROLE_IDS = "user-role-ids";
+    const MANAGEMENT_ID = "user-management-role";
+
+    public function checkManagementAccess(User $user): bool
+    {
+        return Cache::rememberForever(self::MANAGEMENT_ID . ":{$user->id}", function () use ($user) {
+            $role = $user->roles()
+                ->whereNotNull("management")
+                ->first();
+            if ($role) return true;
+            else return false;
+        });
+    }
+
+    public function forgetManagementAccess(User $user): void
+    {
+        Cache::forget(self::MANAGEMENT_ID . ":{$user->id}");
+    }
 
     public function allowedAction(User $user, string $permissionKey, int $action): bool
     {
@@ -79,6 +96,7 @@ class PermissionActionsManager
     public function forgetRoleIds(User $user): void
     {
         Cache::forget(self::ROLE_IDS . ":{$user->id}");
+        $this->forgetManagementAccess($user);
     }
 
     public function getRightsListByRolePermission(Role $role, Permission $permission): array

@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean("super")
+            $table->dateTime("super")
                 ->after("id")
-                ->default(false);
+                ->nullable();
         });
     }
 

@@ -9,6 +9,8 @@ use Aweram\UserManagement\Models\Role;
 use Illuminate\Support\Facades\Facade;
 
 /**
+ * @method static bool checkManagementAccess(User $user)
+ * @method static void forgetManagementAccess(User $user)
  * @method static bool allowedAction(User $user, string $permissionKey, int $action)
  *
  * @method static array getRightsByPermissionRoles(array $roleIds, string $key)

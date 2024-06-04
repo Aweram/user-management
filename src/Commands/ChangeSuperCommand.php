@@ -64,7 +64,8 @@ class ChangeSuperCommand extends Command
         /**
          * @var User $user
          */
-        $user->super = ! $user->super;
+        $super = $user->super;
+        $user->super = $super ? null : now();
         $user->save();
         $this->info("User super status has been changed");
     }
