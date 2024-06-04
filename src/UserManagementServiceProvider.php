@@ -8,6 +8,7 @@ use Aweram\UserManagement\Commands\CreatePermissionsCommand;
 use Aweram\UserManagement\Facades\PermissionActions;
 use Aweram\UserManagement\Helpers\PermissionActionsManager;
 use Aweram\UserManagement\Http\Middleware\AppManagement;
+use Aweram\UserManagement\Http\Middleware\SuperUser;
 use Aweram\UserManagement\Livewire\RoleIndexWire;
 use Aweram\UserManagement\Livewire\UserIndexWire;
 use Aweram\UserManagement\Models\Role;
@@ -40,6 +41,7 @@ class UserManagementServiceProvider extends ServiceProvider
 
         // Middleware
         $this->app["router"]->aliasMiddleware("app-management", AppManagement::class);
+        $this->app["router"]->aliasMiddleware("super-user", SuperUser::class);
 
         // Policy
         Gate::before(function (User $user, string $ability) {
