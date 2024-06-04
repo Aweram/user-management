@@ -10,6 +10,8 @@
 
 Добавляет middleware `app-management` - дает доступ только тем пользователям, у которых есть роль с правом управления сайтом
 
+Добавляет middleware `super-user` - дает доступ только пользователям с заполненным полем super
+
 ### Установка
 
 Добавить `"./vendor/aweram/user-management/src/resources/views/**/*.blade.php"` в `tailwind.admin.config.js`, созданный в пакете `tailwindcss-theme`.

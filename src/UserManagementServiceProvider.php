@@ -50,6 +50,9 @@ class UserManagementServiceProvider extends ServiceProvider
         Gate::define("app-management", function (User $user) {
             return PermissionActions::checkManagementAccess($user);
         });
+        Gate::define("super-user", function (User $user) {
+            return ! empty($user->super);
+        });
 
         // Наблюдатели
         $userObserverClass = config("user-management.customUserObserver") ?? UserObserver::class;
